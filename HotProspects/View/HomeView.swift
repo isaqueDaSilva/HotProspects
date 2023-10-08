@@ -9,10 +9,22 @@ import SwiftUI
 
 struct HomeView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        TabView {
+            ProspectsView()
+                .tabItem {
+                    Label(FilterTypesViews.everyone.rawValue, image: "person.3")
+                }
+                .tag(FilterTypesViews.everyone)
+            
+            ProspectsView()
+                .tabItem {
+                    Label(FilterTypesViews.contacteds.rawValue, image: "checkmark.circle")
+                }
+                .tag(FilterTypesViews.contacteds)
+            
+            ProspectsView()
+            
+            ProfileView()
+        }
     }
-}
-
-#Preview {
-    HomeView()
 }
