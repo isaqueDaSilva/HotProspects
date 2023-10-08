@@ -11,4 +11,5 @@ enum FilterTypesViews: String {
     case everyone = "Everyone"
     case contacteds = "Contacteds"
     case uncontacted = "Uncontacted"
+    case profile = "Profile"
 }

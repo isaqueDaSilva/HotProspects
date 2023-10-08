@@ -10,21 +10,29 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         TabView {
-            ProspectsView()
+            ProspectsView(filterTypeView: .everyone)
                 .tabItem {
                     Label(FilterTypesViews.everyone.rawValue, image: "person.3")
                 }
                 .tag(FilterTypesViews.everyone)
             
-            ProspectsView()
+            ProspectsView(filterTypeView: .contacteds)
                 .tabItem {
                     Label(FilterTypesViews.contacteds.rawValue, image: "checkmark.circle")
                 }
                 .tag(FilterTypesViews.contacteds)
             
-            ProspectsView()
+            ProspectsView(filterTypeView: .uncontacted)
+                .tabItem {
+                    Label(FilterTypesViews.uncontacted.rawValue, image: "questionmark.diamond")
+                }
+                .tag(FilterTypesViews.uncontacted)
             
             ProfileView()
+                .tabItem {
+                    Label(FilterTypesViews.profile.rawValue, image: "person.crop.square")
+                }
+                .tag(FilterTypesViews.profile)
         }
     }
 }
