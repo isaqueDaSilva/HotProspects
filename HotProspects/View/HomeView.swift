@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject var viewModel = HomeViewModel()
     var body: some View {
         TabView {
             ProspectsView(filterTypeView: .everyone)
@@ -34,5 +35,6 @@ struct HomeView: View {
                 }
                 .tag(FilterTypesViews.profile)
         }
+        .environmentObject(viewModel)
     }
 }
