@@ -11,30 +11,28 @@ struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     var body: some View {
         TabView {
-            ProspectsView(filterTypeView: .everyone)
-                .tabItem {
-                    Label(FilterTypesViews.everyone.rawValue, image: "person.3")
-                }
-                .tag(FilterTypesViews.everyone)
+            ForEach(viewModel.prospectsViews) { prospect in
+                ProspectsView(filter: prospect.type)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: prospect.icone)
+                            Text(prospect.type.rawValue)
+                        }
+                    }
+                    .tag(prospect.type)
+            }
             
-            ProspectsView(filterTypeView: .contacteds)
-                .tabItem {
-                    Label(FilterTypesViews.contacteds.rawValue, image: "checkmark.circle")
-                }
-                .tag(FilterTypesViews.contacteds)
-            
-            ProspectsView(filterTypeView: .uncontacted)
-                .tabItem {
-                    Label(FilterTypesViews.uncontacted.rawValue, image: "questionmark.diamond")
-                }
-                .tag(FilterTypesViews.uncontacted)
             
             ProfileView()
                 .tabItem {
-                    Label(FilterTypesViews.profile.rawValue, image: "person.crop.square")
+                    VStack {
+                        Image(systemName: "person.crop.square")
+                        Text("Profile")
+                    }
                 }
-                .tag(FilterTypesViews.profile)
+                .tag("Profile")
         }
         .environmentObject(viewModel)
     }
 }
+

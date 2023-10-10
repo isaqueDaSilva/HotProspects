@@ -8,9 +8,27 @@
 import SwiftUI
 
 struct ProspectsView: View {
-    @EnvironmentObject var prospects: HomeViewModel
-    let filterTypeView: FilterTypesViews
+    @StateObject var viewModel: ProspectViewModel
+    let filter: FilterTypesViews
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            List {
+                ForEach(viewModel.filterProspects) { prospect in
+                    VStack(alignment: .leading) {
+                        Text(prospect.name)
+                            .font(.headline)
+                        Text(prospect.emailAddress)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .navigationTitle(filter.rawValue)
+        }
+    }
+    
+    init(filter: FilterTypesViews) {
+        self.filter = filter
+        _viewModel = StateObject(wrappedValue: ProspectViewModel(filterType: filter))
     }
 }

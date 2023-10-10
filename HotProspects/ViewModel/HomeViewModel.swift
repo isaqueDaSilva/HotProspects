@@ -7,7 +7,12 @@
 
 import Foundation
 
-@MainActor
-class HomeViewModel: ObservableObject {
-    @Published var prospects = [Prospects]()
+extension HomeView {
+    class HomeViewModel: ObservableObject {
+        let prospectsViews = [
+            ProspectType(type: .everyone, icone: "person.3"),
+            ProspectType(type: .contacteds, icone: "checkmark.circle"),
+            ProspectType(type: .uncontacted, icone: "questionmark.diamond")
+        ]
+    }
 }
