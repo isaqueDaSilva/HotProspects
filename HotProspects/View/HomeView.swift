@@ -32,7 +32,6 @@ struct HomeView: View {
                 }
                 .tag("Profile")
         }
-        .environmentObject(viewModel)
     }
 }
 
