@@ -20,15 +20,15 @@ extension Prospect {
     @NSManaged public var name: String?
     @NSManaged public var emailAddress: String?
     @NSManaged public var isContacted: Bool
-    
+    @NSManaged public var user: User?
+
     public var wrappedName: String {
         name ?? "Unknown Name"
     }
     
     public var wrappedEmailAddress: String {
-        emailAddress ?? "No Email"
+        emailAddress ?? "Unknown Email Address"
     }
-
 }
 
 extension Prospect : Identifiable {

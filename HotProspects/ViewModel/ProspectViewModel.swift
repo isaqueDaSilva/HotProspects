@@ -15,6 +15,7 @@ extension ProspectsView {
         @Published var peoples = [Prospect]()
         @Published var filterTypeView: FilterTypesViews
         @Published var isScannerViewOn = false
+        @Published var showingErrorAlert = false
         
         var filterProspects: [Prospect] {
             switch filterTypeView {
@@ -27,9 +28,19 @@ extension ProspectsView {
             }
         }
         
+        func isShowingScannerValid() {
+            Task { @MainActor in
+                if await manager.user.isEmpty {
+                    showingErrorAlert = true
+                } else {
+                    isScannerViewOn = true
+                }
+            }
+        }
+        
         func getPeoples() {
             Task { @MainActor in
-                await manager.fetchProspectList()
+                await manager.fetchUser()
                 peoples = await manager.prospectList
             }
         }
@@ -60,7 +71,6 @@ extension ProspectsView {
         
         init(filterType: FilterTypesViews) {
             self.filterTypeView = filterType
-            getPeoples()
         }
     }
 }

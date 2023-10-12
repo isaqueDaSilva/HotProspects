@@ -15,24 +15,37 @@ actor ProspectManager {
     let context: NSManagedObjectContext
     
     var prospectList = [Prospect]()
+    var user = [User]()
     
     private func save() {
         do {
             try context.save()
-            fetchProspectList()
+            fetchUser()
         } catch let error {
             print("Falied to loading Prospect List. Error: \(error)")
         }
     }
     
-    func fetchProspectList() {
-        let request = NSFetchRequest<Prospect>(entityName: "Prospect")
+    func fetchUser() {
+        let request = NSFetchRequest<User>(entityName: "User")
         
         do {
-            prospectList = try context.fetch(request)
+            user = try context.fetch(request)
+            
+            guard let userIndex = user.first else { return }
+            prospectList = userIndex.prospectList
         } catch let error {
             print("Falied to loading Prospect List. Error: \(error)")
         }
+    }
+    
+    func createNewProfile(name: String, emailAddress: String) {
+        let newProfile = User(context: context)
+        newProfile.id = UUID()
+        newProfile.name = name
+        newProfile.emailAddress = emailAddress
+        user.append(newProfile)
+        save()
     }
     
     func addNewProspect(name: String, emailAddress: String) {
@@ -41,7 +54,13 @@ actor ProspectManager {
         newProspect.name = name
         newProspect.emailAddress = emailAddress
         newProspect.isContacted = false
-        prospectList.append(newProspect)
+        newProspect.user = User(context: context)
+        
+        guard let userIndex = user.first else { return }
+        newProspect.user?.id = userIndex.id
+        newProspect.user?.name = userIndex.name
+        newProspect.user?.emailAddress = userIndex.emailAddress
+        userIndex.prospect?.adding(newProspect)
         save()
     }
     
@@ -51,7 +70,7 @@ actor ProspectManager {
     }
     
     private init() {
-        self.container = NSPersistentContainer(name: "Prospect")
+        self.container = NSPersistentContainer(name: "UserModel")
         self.context = container.viewContext
         
         self.container.loadPersistentStores { (success, error) in

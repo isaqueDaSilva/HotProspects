@@ -36,9 +36,10 @@ struct ProspectsView: View {
                 }
             }
             .navigationTitle(filter.rawValue)
+            .onAppear(perform: viewModel.getPeoples)
             .toolbar {
                 Button(action: {
-                    viewModel.isScannerViewOn = true
+                    viewModel.isShowingScannerValid()
                 }, label: {
                     Label("Scan a QR Code", systemImage: "qrcode.viewfinder")
                 })
@@ -46,6 +47,12 @@ struct ProspectsView: View {
             .sheet(isPresented: $viewModel.isScannerViewOn, content: {
                 CodeScannerView(codeTypes: [.qr], simulatedData: "Paul Hudson\npaul@hackingwithswift.com", completion: viewModel.handleScan)
             })
+            .alert("Create an Account", isPresented: $viewModel.showingErrorAlert) {
+                Button("OK") { }
+            } message: {
+                Text("Before proceeding, create an account so that the App works correctly.")
+            }
+
         }
     }
     
