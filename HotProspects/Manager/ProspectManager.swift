@@ -14,7 +14,6 @@ actor ProspectManager {
     let container: NSPersistentContainer
     let context: NSManagedObjectContext
     
-    var prospectList = [Prospect]()
     var user = [User]()
     
     private func save() {
@@ -28,12 +27,8 @@ actor ProspectManager {
     
     func fetchUser() {
         let request = NSFetchRequest<User>(entityName: "User")
-        
         do {
             user = try context.fetch(request)
-            
-            guard let userIndex = user.first else { return }
-            prospectList = userIndex.prospectList
         } catch let error {
             print("Falied to loading Prospect List. Error: \(error)")
         }
@@ -66,6 +61,12 @@ actor ProspectManager {
     
     func toggleIsContactedStatus(_ prospect: Prospect) {
         prospect.isContacted.toggle()
+        save()
+    }
+    
+    func deleteUser() {
+        guard let user = user.first else { return }
+        context.delete(user)
         save()
     }
     

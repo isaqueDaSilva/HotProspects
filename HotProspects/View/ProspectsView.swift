@@ -7,6 +7,7 @@
 
 import CodeScanner
 import SwiftUI
+import UserNotifications
 
 struct ProspectsView: View {
     @StateObject var viewModel: ProspectViewModel
@@ -32,6 +33,14 @@ struct ProspectsView: View {
                             )
                         }
                         .tint(prospect.isContacted ? .red : .green)
+                        
+                        Button {
+                            viewModel.addNotification(for: prospect)
+                        } label: {
+                            Label("Remind Me", systemImage: "bell")
+                        }
+                        .tint(.orange)
+
                     }
                 }
             }
@@ -52,7 +61,6 @@ struct ProspectsView: View {
             } message: {
                 Text("Before proceeding, create an account so that the App works correctly.")
             }
-
         }
     }
     

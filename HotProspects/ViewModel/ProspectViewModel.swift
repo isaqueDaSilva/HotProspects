@@ -7,6 +7,7 @@
 
 import CodeScanner
 import Foundation
+import UserNotifications
 
 extension ProspectsView {
     class ProspectViewModel: ObservableObject {
@@ -41,7 +42,8 @@ extension ProspectsView {
         func getPeoples() {
             Task { @MainActor in
                 await manager.fetchUser()
-                peoples = await manager.prospectList
+                guard let user = await manager.user.first else { return }
+                peoples = user.prospectList
             }
         }
         
@@ -66,6 +68,33 @@ extension ProspectsView {
             Task { @MainActor in
                 await manager.toggleIsContactedStatus(prospect)
                 getPeoples()
+            }
+        }
+        
+        func addNotification(for prospect: Prospect) {
+            let center = UNUserNotificationCenter.current()
+            
+            let addRequest = {
+                let content = UNMutableNotificationContent()
+                content.title = "Contact \(prospect.wrappedName)"
+                content.subtitle = prospect.wrappedEmailAddress
+                content.sound = UNNotificationSound.default
+                
+                var dateComponents = DateComponents()
+                dateComponents.hour = 9
+                //let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+                
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                center.add(request)
+            }
+            
+            center.getNotificationSettings { settings in
+                if settings.authorizationStatus == .authorized {
+                    addRequest()
+                } else {
+                    print("The user did not authorize the App to send notification.")
+                }
             }
         }
         

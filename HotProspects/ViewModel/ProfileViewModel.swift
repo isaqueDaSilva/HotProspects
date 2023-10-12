@@ -22,6 +22,7 @@ extension ProfileView {
         @Published var showingAlert = false
         @Published var alertTitle = ""
         @Published var alertMessage = ""
+        @Published var showingDeleteProfileAlert = false
         
         let context = CIContext()
         let filter = CIFilter.qrCodeGenerator()
@@ -30,6 +31,8 @@ extension ProfileView {
             Task {
                 await manager.createNewProfile(name: name, emailAddress: emailAddress)
                 getUser()
+                name = ""
+                emailAddress = ""
             }
         }
         
@@ -39,6 +42,8 @@ extension ProfileView {
                 user = await manager.user
                 if !user.isEmpty {
                     self.userExist = true
+                } else {
+                    self.userExist = false
                 }
             }
         }
@@ -74,6 +79,13 @@ extension ProfileView {
             }
             
             imageSaver.writeToPhotoAlbum(qrCode)
+        }
+        
+        func deleteUser() {
+            Task {
+                await manager.deleteUser()
+                getUser()
+            }
         }
         
         init() {

@@ -47,7 +47,23 @@ struct ProfileView: View {
                 } message: {
                     Text(viewModel.alertMessage)
                 }
+                .toolbar {
+                    Button {
+                        viewModel.showingDeleteProfileAlert = true
+                    } label: {
+                        Label("Delete profile", systemImage: "trash")
+                    }
 
+                }
+                .alert("Delete Profile", isPresented: $viewModel.showingDeleteProfileAlert) {
+                    Button("Delete", role: .destructive) {
+                        viewModel.deleteUser()
+                    }
+                    
+                    Button("Cancel", role: .cancel) { }
+                } message: {
+                    Text("Are you sure you want to delete this profile?")
+                }
             } else {
                 Form {
                     Section {
@@ -55,6 +71,7 @@ struct ProfileView: View {
                             .textContentType(.name)
                         TextField("Insert your email address...", text: $viewModel.emailAddress)
                             .textContentType(.emailAddress)
+                            .textInputAutocapitalization(.never)
                     }
                     
                     Section {
