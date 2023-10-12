@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = ProspectsController()
     var body: some View {
         TabView {
             ForEach(viewModel.prospectsViews) { prospect in
@@ -32,6 +32,7 @@ struct HomeView: View {
                 }
                 .tag("Profile")
         }
+        .environmentObject(viewModel)
     }
 }
 

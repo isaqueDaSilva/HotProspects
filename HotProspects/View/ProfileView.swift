@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject var viewModel = ProfileViewModel()
+    //@StateObject var viewModel = ProfileViewModel()
+    @EnvironmentObject var viewModel: ProspectsController
     var body: some View {
         NavigationView {
             if viewModel.userExist {

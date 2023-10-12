@@ -7,26 +7,26 @@
 
 import CodeScanner
 import SwiftUI
-import UserNotifications
 
 struct ProspectsView: View {
-    @StateObject var viewModel: ProspectViewModel
+    @EnvironmentObject var viewModel: ProspectsController
     let filter: FilterTypesViews
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(viewModel.filterProspects) { prospect in
+                ForEach(filterProspects) { prospect in
                     VStack(alignment: .leading) {
                         Text(prospect.wrappedName)
                             .font(.headline)
+                            .foregroundColor(prospect.isContacted ? .green : .red)
                         Text(prospect.wrappedEmailAddress)
                             .foregroundColor(.secondary)
                     }
                     .swipeActions {
                         Button {
                             viewModel.toggleIsContacted(prospect)
-                        } label: {
+                        } label : {
                             Label(
                                 prospect.isContacted ? "Mark Uncontacted" : "Mark Contacted",
                                 systemImage: prospect.isContacted ? "person.crop.circle.badge.xmark" : "person.crop.circle.fill.badge.checkmark"
@@ -34,24 +34,39 @@ struct ProspectsView: View {
                         }
                         .tint(prospect.isContacted ? .red : .green)
                         
-                        Button {
-                            viewModel.addNotification(for: prospect)
-                        } label: {
-                            Label("Remind Me", systemImage: "bell")
+                        if prospect.isContacted == false {
+                            Button {
+                                viewModel.addNotifications(for: prospect)
+                            } label: {
+                                Label("Remind Me", systemImage: "bell")
+                            }
+                            .tint(.orange)
                         }
-                        .tint(.orange)
-
                     }
                 }
             }
             .navigationTitle(filter.rawValue)
-            .onAppear(perform: viewModel.getPeoples)
+            .onAppear(perform: viewModel.getUser)
             .toolbar {
-                Button(action: {
-                    viewModel.isShowingScannerValid()
-                }, label: {
-                    Label("Scan a QR Code", systemImage: "qrcode.viewfinder")
-                })
+                ToolbarItem {
+                    HStack {
+                        Button(action: {
+                            viewModel.isShowingScannerValid()
+                        }, label: {
+                            Label("Scan a QR Code", systemImage: "qrcode.viewfinder")
+                        })
+                        
+                        Menu {
+                            Picker("Filter", selection: $viewModel.sortedBy) {
+                                ForEach(SortedBy.allCases, id: \.self) {
+                                    Text($0.rawValue)
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "line.3.horizontal.decrease.circle")
+                        }
+                    }
+                }
             }
             .sheet(isPresented: $viewModel.isScannerViewOn, content: {
                 CodeScannerView(codeTypes: [.qr], simulatedData: "Paul Hudson\npaul@hackingwithswift.com", completion: viewModel.handleScan)
@@ -62,10 +77,5 @@ struct ProspectsView: View {
                 Text("Before proceeding, create an account so that the App works correctly.")
             }
         }
-    }
-    
-    init(filter: FilterTypesViews) {
-        self.filter = filter
-        _viewModel = StateObject(wrappedValue: ProspectViewModel(filterType: filter))
     }
 }
