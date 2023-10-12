@@ -33,17 +33,6 @@ class ProspectsController: ObservableObject {
     @Published var alertMessage = ""
     @Published var isScannerViewOn = false
     @Published var showingErrorAlert = false
-    
-    @MainActor var sorted: [Prospect] {
-        guard let user = user.first else { return [] }
-        
-        switch sortedBy {
-        case .increasing:
-            return user.prospectList.sorted { $0.wrappedName < $1.wrappedName }
-        case .decreasing:
-            return user.prospectList.sorted { $0.wrappedName > $1.wrappedName }
-        }
-    }
  
     func getUser() {
         Task { @MainActor in
