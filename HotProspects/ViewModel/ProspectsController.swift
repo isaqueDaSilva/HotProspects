@@ -13,7 +13,7 @@ import SwiftUI
 import UserNotifications
 
 class ProspectsController: ObservableObject {
-    let manager = ProspectManager.shared
+    let manager = ProspectManager()
     
     let prospectsViews = [
         ProspectType(type: .everyone, icone: "person.3"),
@@ -24,7 +24,7 @@ class ProspectsController: ObservableObject {
     
     @MainActor @Published var user = [User]()
     @AppStorage("SortedBy") var sortedBy: SortedBy = .increasing
-    @Published var userExist = false
+    @Published var profileViewState: ProfileViewState = .createProfile
     @Published var showingDeleteProfileAlert = false
     @Published var name = ""
     @Published var emailAddress = ""
@@ -39,9 +39,9 @@ class ProspectsController: ObservableObject {
             await manager.fetchUser()
             user = await manager.user
             if !user.isEmpty {
-                self.userExist = true
+                self.profileViewState = .profileCreated
             } else {
-                self.userExist = false
+                self.profileViewState = .createProfile
             }
         }
     }

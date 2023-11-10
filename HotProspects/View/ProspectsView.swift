@@ -72,7 +72,6 @@ struct ProspectsView: View {
                 CodeScannerView(codeTypes: [.qr], simulatedData: "Paul Hudson\npaul@hackingwithswift.com", completion: viewModel.handleScan)
             })
             .alert("Create an Account", isPresented: $viewModel.showingErrorAlert) {
-                Button("OK") { }
             } message: {
                 Text("Before proceeding, create an account so that the App works correctly.")
             }

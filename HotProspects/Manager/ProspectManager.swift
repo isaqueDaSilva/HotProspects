@@ -9,8 +9,6 @@ import CoreData
 import Foundation
 
 actor ProspectManager {
-    static let shared = ProspectManager()
-    
     let container: NSPersistentContainer
     let context: NSManagedObjectContext
     
@@ -39,7 +37,6 @@ actor ProspectManager {
         newProfile.id = UUID()
         newProfile.name = name
         newProfile.emailAddress = emailAddress
-        user.append(newProfile)
         save()
     }
     
@@ -70,7 +67,7 @@ actor ProspectManager {
         save()
     }
     
-    private init() {
+    init() {
         self.container = NSPersistentContainer(name: "UserModel")
         self.context = container.viewContext
         
