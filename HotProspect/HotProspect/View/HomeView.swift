@@ -15,12 +15,14 @@ struct HomeView: View {
                     .tabItem {
                         Label(prospect.rawValue, systemImage: prospect.icon)
                     }
+                    .tag(prospect.id)
             }
             
             ProfileView()
                 .tabItem {
                     Label("Profile", systemImage: Icons.personCrop.rawValue)
                 }
+                .tag("Profile")
         }
     }
 }
