@@ -60,14 +60,14 @@ extension ProspectView {
                 Button {
                     // Do something
                 } label: {
-                    Label("Contacted me", systemImage: "person.crop.circle.badge.checkmark")
+                    Label("Contacted me", systemImage: Icons.personCropCircle.rawValue)
                 }
                 .tint(.green)
                 
                 Button {
                     // Do something...
                 } label: {
-                    Label("Notify me", systemImage: "bell.fill")
+                    Label("Notify me", systemImage: Icons.bellFill.rawValue)
                 }
                 .tint(.orange)
             }
